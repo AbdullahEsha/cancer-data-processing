@@ -12,6 +12,12 @@
 source env/bin/activate
 ```
 
+- Deactivating the Environment
+
+```bash
+deactivate
+```
+
 # Freeze dependencies
 
 ```bash
