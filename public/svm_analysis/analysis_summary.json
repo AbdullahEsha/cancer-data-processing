@@ -1,0 +1,79 @@
+{
+  "Dataset_Shape": [
+    2294,
+    15
+  ],
+  "Selected_Features": [
+    "Age",
+    "Gender",
+    "Bone Marrow Aspiration(Positive / Negative / Not Done)",
+    "Total WBC count(/cumm)",
+    "Lymph Node Biopsy(Positive / Negative / Not Done)",
+    "Lumbar Puncture (Spinal Tap)",
+    "Platelet Count( (/cumm)",
+    "Treatment_Outcome",
+    "Side_Effects",
+    "Diagnosis_Result"
+  ],
+  "Model_Performance": {
+    "Accuracy": 0.18082788671023964,
+    "Best_Parameters": {
+      "C": 0.1,
+      "gamma": "auto",
+      "kernel": "poly"
+    },
+    "CV_Mean_Score": 0.18047207238062618,
+    "CV_Std_Score": 0.005786115439274017
+  },
+  "Cancer_Types": [
+    "CLL",
+    "Lymphoma",
+    "AML",
+    "ALL",
+    "Multiple Myeloma",
+    "CML",
+    "Cancer_Type"
+  ],
+  "Feature_Importance": [
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.21207848590356235
+    },
+    {
+      "Feature": "Total WBC count(/cumm)",
+      "Importance": 0.2092869940362948
+    },
+    {
+      "Feature": "Age",
+      "Importance": 0.19288877710404687
+    },
+    {
+      "Feature": "Bone Marrow Aspiration(Positive / Negative / Not Done)",
+      "Importance": 0.06389879702242834
+    },
+    {
+      "Feature": "Lymph Node Biopsy(Positive / Negative / Not Done)",
+      "Importance": 0.06168234071393174
+    },
+    {
+      "Feature": "Diagnosis_Result",
+      "Importance": 0.06042953922030633
+    },
+    {
+      "Feature": "Lumbar Puncture (Spinal Tap)",
+      "Importance": 0.05908201118049195
+    },
+    {
+      "Feature": "Treatment_Outcome",
+      "Importance": 0.056910633351901066
+    },
+    {
+      "Feature": "Side_Effects",
+      "Importance": 0.05224379218760499
+    },
+    {
+      "Feature": "Gender",
+      "Importance": 0.03149862927943164
+    }
+  ]
+}

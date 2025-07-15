@@ -3,13 +3,13 @@
 - Windows:
 
 ```bash
-.\env\Scripts\activate
+.\.venv\Scripts\activate
 ```
 
 - macOS/Linux:
 
 ```bash
-source env/bin/activate
+source .venv/bin/activate
 ```
 
 - Deactivating the Environment

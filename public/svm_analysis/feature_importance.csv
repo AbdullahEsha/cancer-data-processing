@@ -1,0 +1,11 @@
+Feature,Importance
+Platelet Count( (/cumm),0.21207848590356235
+Total WBC count(/cumm),0.2092869940362948
+Age,0.19288877710404687
+Bone Marrow Aspiration(Positive / Negative / Not Done),0.06389879702242834
+Lymph Node Biopsy(Positive / Negative / Not Done),0.06168234071393174
+Diagnosis_Result,0.06042953922030633
+Lumbar Puncture (Spinal Tap),0.05908201118049195
+Treatment_Outcome,0.056910633351901066
+Side_Effects,0.05224379218760499
+Gender,0.03149862927943164
