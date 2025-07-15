@@ -1,0 +1,137 @@
+{
+  "final_model": "Gradient Boosting",
+  "final_accuracy": 0.19389978213507625,
+  "all_model_results": {
+    "Random Forest": {
+      "cv_accuracy": 0.2297979797979798,
+      "test_accuracy": 0.15468409586056645,
+      "test_f1": 0.15404382260367988
+    },
+    "Gradient Boosting": {
+      "cv_accuracy": 0.2202020202020202,
+      "test_accuracy": 0.19389978213507625,
+      "test_f1": 0.19347496980490073
+    },
+    "SVM": {
+      "cv_accuracy": 0.21010101010101007,
+      "test_accuracy": 0.16993464052287582,
+      "test_f1": 0.16764718814182622
+    },
+    "Logistic Regression": {
+      "cv_accuracy": 0.16818181818181818,
+      "test_accuracy": 0.17647058823529413,
+      "test_f1": 0.1736988486113493
+    },
+    "K-Nearest Neighbors": {
+      "cv_accuracy": 0.23686868686868684,
+      "test_accuracy": 0.16339869281045752,
+      "test_f1": 0.16368524015275268
+    },
+    "Naive Bayes": {
+      "cv_accuracy": 0.15353535353535355,
+      "test_accuracy": 0.1568627450980392,
+      "test_f1": 0.1402629253399919
+    },
+    "Decision Tree": {
+      "cv_accuracy": 0.18636363636363634,
+      "test_accuracy": 0.16775599128540306,
+      "test_f1": 0.1541393204737958
+    }
+  },
+  "selected_features": [
+    "Age",
+    "Gender",
+    "Treatment_Type(Chemotherapy, Radiation)",
+    "Bone Marrow Aspiration(Positive / Negative / Not Done)",
+    "Total WBC count(/cumm)",
+    "Lymph Node Biopsy(Positive / Negative / Not Done)",
+    "Lumbar Puncture (Spinal Tap)",
+    "Platelet Count( (/cumm)",
+    "Genetic_Data(BCR-ABL, FLT3)",
+    "Side_Effects",
+    "Comments",
+    "WBC_Platelet_Ratio",
+    "Age_Group",
+    "High_WBC",
+    "Low_Platelet"
+  ],
+  "cancer_mapping": {
+    "CLL": 0,
+    "Lymphoma": 1,
+    "AML": 2,
+    "ALL": 3,
+    "Multiple Myeloma": 4,
+    "CML": 5,
+    "Cancer_Type": 6
+  },
+  "class_distribution": {
+    "0": 413,
+    "3": 401,
+    "5": 383,
+    "1": 376,
+    "2": 366,
+    "4": 355
+  },
+  "feature_importance": [
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.21568686623048794
+    },
+    {
+      "Feature": "Total WBC count(/cumm)",
+      "Importance": 0.19863840795591414
+    },
+    {
+      "Feature": "WBC_Platelet_Ratio",
+      "Importance": 0.18424301503663576
+    },
+    {
+      "Feature": "Age",
+      "Importance": 0.11646071702047558
+    },
+    {
+      "Feature": "Treatment_Type(Chemotherapy, Radiation)",
+      "Importance": 0.04549678095149428
+    },
+    {
+      "Feature": "Comments",
+      "Importance": 0.04405525977085688
+    },
+    {
+      "Feature": "Lymph Node Biopsy(Positive / Negative / Not Done)",
+      "Importance": 0.03532918120460436
+    },
+    {
+      "Feature": "Lumbar Puncture (Spinal Tap)",
+      "Importance": 0.03128913551404289
+    },
+    {
+      "Feature": "Genetic_Data(BCR-ABL, FLT3)",
+      "Importance": 0.030974734826942858
+    },
+    {
+      "Feature": "Bone Marrow Aspiration(Positive / Negative / Not Done)",
+      "Importance": 0.030287891397870192
+    },
+    {
+      "Feature": "Side_Effects",
+      "Importance": 0.027736039272323782
+    },
+    {
+      "Feature": "Gender",
+      "Importance": 0.01924667709818238
+    },
+    {
+      "Feature": "Age_Group",
+      "Importance": 0.014733509022734369
+    },
+    {
+      "Feature": "High_WBC",
+      "Importance": 0.003446495266985049
+    },
+    {
+      "Feature": "Low_Platelet",
+      "Importance": 0.0023752894304493503
+    }
+  ]
+}
