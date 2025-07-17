@@ -1,0 +1,75 @@
+{
+  "Dataset_Shape": [
+    1180,
+    14
+  ],
+  "Selected_Features": [
+    "Age",
+    "Total WBC count(/cumm)",
+    "Platelet Count( (/cumm)",
+    "Lymph Node Biopsy(Positive / Negative / Not Done)",
+    "Genetic_Data(BCR-ABL, FLT3)",
+    "WBC_Platelet_Ratio",
+    "High_WBC",
+    "Low_Platelet"
+  ],
+  "Model_Performance": {
+    "Ensemble_Accuracy": 0.6169354838709677,
+    "Individual_Model_Scores": {
+      "Random Forest": 0.5967741935483871,
+      "Gradient Boosting": 0.5362903225806451,
+      "SVM": 0.5161290322580645,
+      "Logistic Regression": 0.41935483870967744
+    },
+    "CV_Mean_Score": 0.6222606765051586,
+    "CV_Std_Score": 0.024382156857310607
+  },
+  "Cancer_Types": [
+    "ALL",
+    "AML",
+    "CLL"
+  ],
+  "Feature_Importance": [
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.2155904727824112
+    },
+    {
+      "Feature": "Total WBC count(/cumm)",
+      "Importance": 0.21444337034591768
+    },
+    {
+      "Feature": "WBC_Platelet_Ratio",
+      "Importance": 0.2136141033491098
+    },
+    {
+      "Feature": "Age",
+      "Importance": 0.20251306549714987
+    },
+    {
+      "Feature": "Genetic_Data(BCR-ABL, FLT3)",
+      "Importance": 0.07283319966041588
+    },
+    {
+      "Feature": "Lymph Node Biopsy(Positive / Negative / Not Done)",
+      "Importance": 0.05271059540690923
+    },
+    {
+      "Feature": "High_WBC",
+      "Importance": 0.01458578653772372
+    },
+    {
+      "Feature": "Low_Platelet",
+      "Importance": 0.01370940642036273
+    }
+  ],
+  "Preprocessing_Steps": [
+    "Removed irrelevant/leaky features",
+    "Advanced outlier handling",
+    "Intelligent categorical encoding",
+    "Feature engineering",
+    "Class balancing",
+    "Mutual information feature selection",
+    "Robust scaling"
+  ]
+}

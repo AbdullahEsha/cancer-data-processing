@@ -1,0 +1,9 @@
+Feature,Importance
+WBC_Platelet_Ratio,0.16329491
+Total WBC count(/cumm),0.16166922
+Platelet Count( (/cumm),0.16064692
+Age,0.14475761
+"Genetic_Data(BCR-ABL, FLT3)",0.13985391
+Lymph Node Biopsy(Positive / Negative / Not Done),0.13525602
+High_WBC,0.094521366
+Low_Platelet,0.0
