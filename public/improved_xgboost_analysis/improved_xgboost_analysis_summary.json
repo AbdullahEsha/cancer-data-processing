@@ -1,0 +1,100 @@
+{
+  "Dataset_Shape": [
+    1918,
+    18
+  ],
+  "Selected_Features": [
+    "Age",
+    "Total WBC count(/cumm)",
+    "Platelet Count( (/cumm)",
+    "WBC_Platelet_Ratio",
+    "WBC_Age_Interaction",
+    "Platelet_Age_Interaction",
+    "Combined_Test_Score"
+  ],
+  "Removed_Features": [
+    "Low_Platelet"
+  ],
+  "New_Features": [
+    "WBC_Age_Interaction",
+    "Platelet_Age_Interaction",
+    "Combined_Test_Score",
+    "Log_WBC",
+    "Log_Platelet"
+  ],
+  "Model_Type": "XGBoost",
+  "Model_Performance": {
+    "Final_Test_Accuracy": 0.7189542483660131,
+    "XGBoost_Accuracy": 0.7189542483660131,
+    "Ensemble_Accuracy": 0.7080610021786492,
+    "Training_Accuracy": 1.0,
+    "CV_Mean_Score": 0.6588235294117647,
+    "CV_Std_Score": 0.021426214994586936,
+    "Best_CV_Score": 0.6693830707262173,
+    "Overfitting_Check": 0.28104575163398693
+  },
+  "Best_Parameters": {
+    "colsample_bytree": 1.0,
+    "gamma": 0,
+    "learning_rate": 0.2,
+    "max_depth": 4,
+    "n_estimators": 400,
+    "reg_alpha": 0,
+    "reg_lambda": 1.5,
+    "subsample": 1.0
+  },
+  "Cancer_Types": [
+    "ALL",
+    "AML",
+    "CLL",
+    "CML",
+    "Multiple Myeloma"
+  ],
+  "Feature_Importance": [
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.1520782709121704
+    },
+    {
+      "Feature": "WBC_Platelet_Ratio",
+      "Importance": 0.14977577328681946
+    },
+    {
+      "Feature": "Platelet_Age_Interaction",
+      "Importance": 0.14925089478492737
+    },
+    {
+      "Feature": "WBC_Age_Interaction",
+      "Importance": 0.1430165022611618
+    },
+    {
+      "Feature": "Total WBC count(/cumm)",
+      "Importance": 0.1391771286725998
+    },
+    {
+      "Feature": "Age",
+      "Importance": 0.1350720077753067
+    },
+    {
+      "Feature": "Combined_Test_Score",
+      "Importance": 0.13162946701049805
+    }
+  ],
+  "Optimization_Steps": [
+    "Two-stage parameter tuning for speed",
+    "Ensemble model for better accuracy",
+    "Reduced CV folds for initial screening",
+    "Removed deprecated parameters",
+    "Added ensemble voting classifier",
+    "Optimized grid search strategy"
+  ],
+  "Improvement_Steps": [
+    "Removed Low_Platelet feature (0 importance)",
+    "Added interaction features",
+    "Added log-transformed features",
+    "Enhanced feature selection (MI + RFE)",
+    "Improved class balancing",
+    "Extended hyperparameter tuning",
+    "Better regularization parameters"
+  ]
+}

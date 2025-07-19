@@ -1,0 +1,8 @@
+Feature,Importance
+Platelet Count( (/cumm),0.15207827
+WBC_Platelet_Ratio,0.14977577
+Platelet_Age_Interaction,0.1492509
+WBC_Age_Interaction,0.1430165
+Total WBC count(/cumm),0.13917713
+Age,0.13507201
+Combined_Test_Score,0.13162947
