@@ -13,6 +13,7 @@ from sklearn.utils import resample
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import seaborn as sns
+import json
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -519,15 +520,12 @@ improved_summary = {
     ]
 }
 
-import json
 with open('public/improved_xgboost_analysis/improved_xgboost_analysis_summary.json', 'w') as f:
     json.dump(improved_summary, f, indent=2)
 
 print("\n=== OPTIMIZED XGBOOST ENHANCEMENT COMPLETE ===")
-print(f"Previous accuracy: 63.68%")
 print(f"Final accuracy: {final_accuracy:.2%}")
 print(f"Model type: {model_type}")
-print(f"Improvement: {((final_accuracy - 0.6368) * 100):.2f} percentage points")
 print(f"Selected features: {len(selected_features)}")
 print(f"Cancer types: {target_names}")
 if 'train_accuracy' in locals():

@@ -9,8 +9,7 @@
     "Platelet Count( (/cumm)",
     "WBC_Platelet_Ratio",
     "WBC_Age_Interaction",
-    "Platelet_Age_Interaction",
-    "Combined_Test_Score"
+    "Platelet_Age_Interaction"
   ],
   "Removed_Features": [
     "Low_Platelet"
@@ -22,25 +21,25 @@
     "Log_WBC",
     "Log_Platelet"
   ],
-  "Model_Type": "XGBoost",
+  "Model_Type": "Ensemble",
   "Model_Performance": {
-    "Final_Test_Accuracy": 0.7189542483660131,
-    "XGBoost_Accuracy": 0.7189542483660131,
-    "Ensemble_Accuracy": 0.7080610021786492,
-    "Training_Accuracy": 1.0,
-    "CV_Mean_Score": 0.6588235294117647,
-    "CV_Std_Score": 0.021426214994586936,
-    "Best_CV_Score": 0.6693830707262173,
-    "Overfitting_Check": 0.28104575163398693
+    "Final_Test_Accuracy": 0.7124183006535948,
+    "XGBoost_Accuracy": 0.7037037037037037,
+    "Ensemble_Accuracy": 0.7124183006535948,
+    "Training_Accuracy": 0.9994553376906318,
+    "CV_Mean_Score": 0.6723311546840959,
+    "CV_Std_Score": 0.010901957301260845,
+    "Best_CV_Score": 0.6737368202819571,
+    "Overfitting_Check": 0.287037037037037
   },
   "Best_Parameters": {
     "colsample_bytree": 1.0,
     "gamma": 0,
-    "learning_rate": 0.2,
-    "max_depth": 4,
-    "n_estimators": 400,
+    "learning_rate": 0.05,
+    "max_depth": 8,
+    "n_estimators": 300,
     "reg_alpha": 0,
-    "reg_lambda": 1.5,
+    "reg_lambda": 1,
     "subsample": 1.0
   },
   "Cancer_Types": [
@@ -52,32 +51,28 @@
   ],
   "Feature_Importance": [
     {
-      "Feature": "Platelet Count( (/cumm)",
-      "Importance": 0.1520782709121704
-    },
-    {
       "Feature": "WBC_Platelet_Ratio",
-      "Importance": 0.14977577328681946
+      "Importance": 0.1760759949684143
     },
     {
       "Feature": "Platelet_Age_Interaction",
-      "Importance": 0.14925089478492737
+      "Importance": 0.17437665164470673
+    },
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.1729004681110382
     },
     {
       "Feature": "WBC_Age_Interaction",
-      "Importance": 0.1430165022611618
+      "Importance": 0.16473713517189026
     },
     {
       "Feature": "Total WBC count(/cumm)",
-      "Importance": 0.1391771286725998
+      "Importance": 0.1646338403224945
     },
     {
       "Feature": "Age",
-      "Importance": 0.1350720077753067
-    },
-    {
-      "Feature": "Combined_Test_Score",
-      "Importance": 0.13162946701049805
+      "Importance": 0.147275909781456
     }
   ],
   "Optimization_Steps": [
