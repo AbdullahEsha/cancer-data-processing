@@ -1,0 +1,137 @@
+{
+  "Dataset_Info": {
+    "Original_Shape": [
+      1180,
+      4
+    ],
+    "Final_Shape": [
+      1180,
+      30
+    ],
+    "Features_Engineered": 26,
+    "Selected_Features": 25
+  },
+  "Model_Performance": {
+    "Model_Type": "XGBoost",
+    "Test_Accuracy": 0.8104838709677419,
+    "Test_F1_Score": 0.809192191576508,
+    "Training_Accuracy": 1.0,
+    "CV_Mean_Accuracy": 0.8062850986025859,
+    "CV_Std_Accuracy": 0.021734804040662102,
+    "Overfitting_Check": 0.18951612903225812,
+    "XGBoost_Accuracy": 0.8104838709677419,
+    "Ensemble_Accuracy": 0.8024193548387096
+  },
+  "Best_Parameters": {
+    "colsample_bytree": 0.9,
+    "gamma": 0,
+    "learning_rate": 0.2,
+    "max_depth": 4,
+    "min_child_weight": 1,
+    "n_estimators": 200,
+    "reg_alpha": 0,
+    "reg_lambda": 1,
+    "subsample": 1.0
+  },
+  "Feature_Engineering": {
+    "Original_Features": [
+      "Age",
+      "Platelet Count( (/cumm)",
+      "Total WBC count(/cumm)"
+    ],
+    "Engineered_Features": [
+      "WBC_Bins",
+      "WBC_Power_2",
+      "WBC_Zscore",
+      "Age_Bins",
+      "Low_Platelet",
+      "WBC_Age_Interaction",
+      "Blood_Count_Risk_Score",
+      "Platelet_Sqrt",
+      "Age_Group",
+      "Platelet_Bins"
+    ],
+    "Feature_Selection_Methods": [
+      "Mutual Information",
+      "F-Statistics",
+      "XGBoost Importance"
+    ]
+  },
+  "Top_15_Features": [
+    {
+      "Feature": "Low_Platelet",
+      "Importance": 0.2752905488014221
+    },
+    {
+      "Feature": "Low_WBC",
+      "Importance": 0.10252542048692703
+    },
+    {
+      "Feature": "Platelet Count( (/cumm)",
+      "Importance": 0.05180574581027031
+    },
+    {
+      "Feature": "Platelet_Power_2",
+      "Importance": 0.050358835607767105
+    },
+    {
+      "Feature": "Platelet_Zscore",
+      "Importance": 0.033128757029771805
+    },
+    {
+      "Feature": "Age_Group",
+      "Importance": 0.03193998709321022
+    },
+    {
+      "Feature": "High_Platelet",
+      "Importance": 0.03172840178012848
+    },
+    {
+      "Feature": "WBC_Platelet_Ratio",
+      "Importance": 0.029364921152591705
+    },
+    {
+      "Feature": "WBC_Power_2",
+      "Importance": 0.028125284239649773
+    },
+    {
+      "Feature": "Log_WBC",
+      "Importance": 0.027509916573762894
+    },
+    {
+      "Feature": "Log_Platelet",
+      "Importance": 0.02622009441256523
+    },
+    {
+      "Feature": "Platelet_Age_Interaction",
+      "Importance": 0.026182005181908607
+    },
+    {
+      "Feature": "WBC_Age_Interaction",
+      "Importance": 0.024744119495153427
+    },
+    {
+      "Feature": "Age_Zscore",
+      "Importance": 0.024522392079234123
+    },
+    {
+      "Feature": "WBC_Zscore",
+      "Importance": 0.024506950750947
+    }
+  ],
+  "Cancer_Types": [
+    "ALL",
+    "AML",
+    "CLL"
+  ],
+  "Optimization_Techniques": [
+    "Two-stage hyperparameter tuning",
+    "Ensemble voting classifier",
+    "Advanced feature engineering",
+    "Intelligent class balancing",
+    "Robust scaling",
+    "Multiple feature selection methods",
+    "Medical knowledge-based feature creation",
+    "Noise injection for diversity in oversampling"
+  ]
+}

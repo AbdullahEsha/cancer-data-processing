@@ -1,8 +1,5 @@
 {
-  "Dataset_Shape": [
-    2294,
-    15
-  ],
+  "Dataset_Shape": [2294, 15],
   "Selected_Features": [
     "Age",
     "Gender",
@@ -25,15 +22,7 @@
     "CV_Mean_Score": 0.18047207238062618,
     "CV_Std_Score": 0.005786115439274017
   },
-  "Cancer_Types": [
-    "CLL",
-    "Lymphoma",
-    "AML",
-    "ALL",
-    "Multiple Myeloma",
-    "CML",
-    "Cancer_Type"
-  ],
+  "Cancer_Types": ["CLL", "Lymphoma", "AML", "ALL", "Multiple Myeloma", "CML"],
   "Feature_Importance": [
     {
       "Feature": "Platelet Count( (/cumm)",

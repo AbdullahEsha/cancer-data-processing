@@ -1,0 +1,23 @@
+Feature,Importance
+Platelet Count( (/cumm),0.052513096
+Platelet_Sqrt,0.051904827
+Age_Squared,0.051794972
+Total WBC count(/cumm),0.051671084
+Age_Sqrt,0.051002033
+WBC_Age_Interaction,0.049811665
+WBC_Zscore,0.048366714
+Log_Platelet,0.048153494
+Platelet_Power_2,0.04720726
+Platelet_Age_Interaction,0.04710481
+Age,0.046792895
+WBC_Sqrt,0.046514653
+Platelet_Zscore,0.04645421
+Log_Age,0.04606644
+WBC_Platelet_Product,0.04362714
+WBC_Platelet_Ratio,0.043467227
+Log_WBC,0.043064974
+WBC_Power_2,0.04212582
+Blood_Count_Risk_Score,0.04008809
+High_WBC,0.03517717
+Age_Group,0.033988178
+High_Platelet,0.03310323

@@ -1,0 +1,33 @@
+{
+  "original_shape": [
+    2295,
+    15
+  ],
+  "selected_features_shape": [
+    2295,
+    4
+  ],
+  "after_dropping_nulls": 2294,
+  "after_numeric_conversion": 2294,
+  "final_shape": [
+    1180,
+    4
+  ],
+  "features": [
+    "Age",
+    "Platelet Count( (/cumm)",
+    "Total WBC count(/cumm)",
+    "Cancer_Type(AML, ALL, CLL)"
+  ],
+  "cancer_type_distribution": {
+    "CLL": 413,
+    "ALL": 401,
+    "AML": 366
+  },
+  "rows_removed": {
+    "null_values": 1,
+    "non_numeric": 1,
+    "non_main_cancer_types": 1114,
+    "invalid_values": 0
+  }
+}
