@@ -106,6 +106,86 @@ print(f"Number of classes: {len(target_counts)}")
 print(f"\nBasic statistics:")
 print(df.describe())
 
+# Data cleaning functions
+def detect_and_remove_header_rows(df):
+    """Detect and remove header rows that appear within the data"""
+    print("=== Detecting and Removing Header Rows ===")
+    
+    original_size = len(df)
+    
+    # Remove rows where Cancer_Type equals the column name itself
+    header_mask = df['Cancer_Type'].str.contains('Cancer_Type|cancer_type', case=False, na=False)
+    
+    if header_mask.any():
+        print(f"Found {header_mask.sum()} header rows mixed in data")
+        df = df[~header_mask].copy()
+        print(f"Removed header rows. New dataset size: {len(df)}")
+    
+    # Remove rows where numerical columns contain column names
+    for col in ['Age', 'WBC_Count', 'Platelet_Count']:
+        if col in df.columns:
+            text_mask = df[col].astype(str).str.contains(col, case=False, na=False)
+            if text_mask.any():
+                print(f"Found {text_mask.sum()} header entries in {col} column")
+                df = df[~text_mask].copy()
+    
+    # Convert numerical columns to proper numeric types
+    for col in ['Age', 'WBC_Count', 'Platelet_Count']:
+        if col in df.columns:
+            print(f"Converting {col} to numeric...")
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+            # Fill any NaN values that resulted from conversion with median
+            if df[col].isnull().sum() > 0:
+                print(f"Found {df[col].isnull().sum()} invalid values in {col}, filling with median")
+                df[col] = df[col].fillna(df[col].median())
+    
+    print(f"Total rows removed: {original_size - len(df)}")
+    return df
+
+def validate_cancer_types(df):
+    """Validate and clean cancer type values"""
+    print("=== Validating Cancer Types ===")
+    
+    # Define valid cancer types
+    valid_cancer_types = ['ALL', 'AML', 'CLL', 'CML', 'Lymphoma', 'Multiple Myeloma']
+    
+    print(f"Cancer_Type value counts before cleaning:")
+    print(df['Cancer_Type'].value_counts())
+    
+    # Filter only valid cancer types
+    valid_mask = df['Cancer_Type'].isin(valid_cancer_types)
+    invalid_count = (~valid_mask).sum()
+    
+    if invalid_count > 0:
+        print(f"Found {invalid_count} invalid cancer type entries")
+        print(f"Invalid entries: {df[~valid_mask]['Cancer_Type'].unique()}")
+        df = df[valid_mask].copy()
+    
+    print(f"Final Cancer_Type distribution:")
+    print(df['Cancer_Type'].value_counts())
+    
+    return df
+
+def safe_train_test_split(X, y, test_size=0.2, random_state=42):
+    """Perform train-test split with proper class validation"""
+    print("=== Performing Safe Train-Test Split ===")
+    
+    # Check class distribution
+    class_counts = y.value_counts()
+    print(f"Class distribution:")
+    print(class_counts)
+    
+    # Check if stratification is possible
+    min_class_size = class_counts.min()
+    required_min_size = int(1 / test_size) + 1  # Minimum samples needed for stratification
+    
+    if min_class_size >= required_min_size:
+        print(f"Using stratified split (min class size: {min_class_size})")
+        return train_test_split(X, y, test_size=test_size, random_state=random_state, stratify=y)
+    else:
+        print(f"WARNING: Smallest class has only {min_class_size} samples. Using random split instead.")
+        return train_test_split(X, y, test_size=test_size, random_state=random_state)
+
 # Data Distribution Visualization
 def plot_data_distribution(df):
     """Plot comprehensive data distribution for 4 features"""
@@ -150,6 +230,9 @@ def plot_data_distribution(df):
     plt.tight_layout()
     plt.savefig('data_distribution_4features.png', dpi=300, bbox_inches='tight')
     plt.show()
+
+# Clean header rows before visualization
+df = detect_and_remove_header_rows(df)
 
 # Plot data distribution
 print(f"\n=== Data Visualization ===")
@@ -227,6 +310,9 @@ print(f"\n=== Outlier Detection and Removal ===")
 df_clean, outlier_indices = detect_and_remove_outliers(df, contamination=0.05)
 print(f"Dataset shape after outlier removal: {df_clean.shape}")
 
+# Validate cancer types
+df_clean = validate_cancer_types(df_clean)
+
 # Encode the target variable
 label_encoder = LabelEncoder()
 df_clean['Cancer_Type_Encoded'] = label_encoder.fit_transform(df_clean['Cancer_Type'])
@@ -253,9 +339,9 @@ for i, count in enumerate(class_counts):
 class_balance = class_counts.min() / class_counts.max()
 print(f"Class balance ratio: {class_balance:.3f}")
 
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+# Split the data using safe train-test split
+X_train, X_test, y_train, y_test = safe_train_test_split(
+    X, y, test_size=0.2, random_state=42
 )
 
 print(f"\nData split:")
