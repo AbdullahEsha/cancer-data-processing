@@ -1,0 +1,128 @@
+{
+    "timestamp": "2025-07-25 14:14:58",
+    "user": "AbdullahEsha",
+    "algorithm": "XGBoost",
+    "dataset": {
+        "original_size": 2295,
+        "cleaned_size": 2294,
+        "features_used": 19,
+        "feature_names": [
+            "Age",
+            "WBC_Count",
+            "Platelet_Count",
+            "Age_WBC_Count_ratio",
+            "Age_Platelet_Count_ratio",
+            "WBC_Count_Platelet_Count_ratio",
+            "WBC_Count_Age_WBC_Count_ratio_ratio",
+            "WBC_Count_Age_Platelet_Count_ratio_ratio",
+            "Age_squared",
+            "Age_log",
+            "WBC_Count_squared",
+            "WBC_Count_log",
+            "Platelet_Count_squared",
+            "Platelet_Count_log",
+            "Age_WBC_interaction",
+            "Age_Platelet_interaction",
+            "Age_binned",
+            "WBC_Count_binned",
+            "Platelet_Count_binned"
+        ],
+        "target_column": "Cancer_Type"
+    },
+    "data_preprocessing": {
+        "header_rows_removed": true,
+        "missing_values_handled": true,
+        "feature_engineering": true,
+        "scaling_applied": true,
+        "feature_engineering_details": {
+            "ratio_features": true,
+            "polynomial_features": true,
+            "interaction_features": true,
+            "binned_features": true
+        }
+    },
+    "model_performance": {
+        "test_accuracy": 0.1503267973856209,
+        "train_accuracy": 0.7340599455040872,
+        "cv_mean_accuracy": 0.179291553133515,
+        "cv_std_accuracy": 0.009656700352408358,
+        "f1_score": 0.14818527738522472,
+        "overfitting_measure": 0.5837331481184662
+    },
+    "best_hyperparameters": {
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "n_estimators": 100,
+        "subsample": 0.9
+    },
+    "class_distribution": {
+        "num_classes": 6,
+        "class_names": [
+            "ALL",
+            "AML",
+            "CLL",
+            "CML",
+            "Lymphoma",
+            "Multiple Myeloma"
+        ],
+        "class_counts": {
+            "CLL": 413,
+            "ALL": 401,
+            "CML": 383,
+            "Lymphoma": 376,
+            "AML": 366,
+            "Multiple Myeloma": 355
+        }
+    },
+    "feature_importance": {
+        "top_10_features": [
+            {
+                "feature": "Age_log",
+                "importance": 0.08556946367025375
+            },
+            {
+                "feature": "WBC_Count_binned",
+                "importance": 0.07904647290706635
+            },
+            {
+                "feature": "Platelet_Count_squared",
+                "importance": 0.06400439143180847
+            },
+            {
+                "feature": "WBC_Count_Age_WBC_Count_ratio_ratio",
+                "importance": 0.06032678484916687
+            },
+            {
+                "feature": "WBC_Count_log",
+                "importance": 0.05721259117126465
+            },
+            {
+                "feature": "Age_WBC_interaction",
+                "importance": 0.05718137323856354
+            },
+            {
+                "feature": "WBC_Count_Age_Platelet_Count_ratio_ratio",
+                "importance": 0.0566064715385437
+            },
+            {
+                "feature": "Age_WBC_Count_ratio",
+                "importance": 0.05645405128598213
+            },
+            {
+                "feature": "WBC_Count_Platelet_Count_ratio",
+                "importance": 0.0563000924885273
+            },
+            {
+                "feature": "Platelet_Count",
+                "importance": 0.055338986217975616
+            }
+        ]
+    },
+    "files_saved": {
+        "model": "public/xgboost_results/xgboost_blood_cancer_model.pkl",
+        "scaler": "public/xgboost_results/xgboost_scaler.pkl",
+        "label_encoder": "public/xgboost_results/label_encoder.pkl",
+        "results_json": "public/xgboost_results/xgboost_results.json"
+    }
+}

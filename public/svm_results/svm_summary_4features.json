@@ -1,0 +1,38 @@
+{
+    "algorithm": "SVM",
+    "dataset": "4 features only (Age, WBC_Count, Platelet_Count, Cancer_Type)",
+    "original_size": 2294,
+    "cleaned_size": 2179,
+    "outliers_removed": 115,
+    "num_classes": 6,
+    "class_names": [
+        "ALL",
+        "AML",
+        "CLL",
+        "CML",
+        "Lymphoma",
+        "Multiple Myeloma"
+    ],
+    "best_params": {
+        "C": 1,
+        "class_weight": null,
+        "kernel": "linear"
+    },
+    "test_accuracy": 0.1651376146788991,
+    "train_accuracy": 0.19334480780263913,
+    "cv_mean_accuracy": 0.17498565691336776,
+    "cv_std_accuracy": 0.007211592134237822,
+    "f1_score": 0.08694148089722833,
+    "overfitting_measure": 0.028207193123740038,
+    "feature_names": [
+        "Age",
+        "WBC_Count",
+        "Platelet_Count"
+    ],
+    "visualizations": {
+        "feature_importance": "public/svm_results/svm_feature_importance_4features.png",
+        "confusion_matrix": "public/svm_results/svm_confusion_matrix_4features.png",
+        "cv_scores": "public/svm_results/svm_cv_scores_4features.png",
+        "decision_boundary": "public/svm_results/svm_decision_boundary_4features.png"
+    }
+}

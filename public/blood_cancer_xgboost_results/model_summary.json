@@ -1,0 +1,17 @@
+{
+  "best_model": "Optimized_RandomForest",
+  "test_accuracy": 0.47058823529411764,
+  "test_f1": 0.26157688410652835,
+  "roc_auc": 0.5404720933125781,
+  "cv_accuracy": 0.745086440185181,
+  "cv_f1": 0.748934971937514,
+  "feature_count": 54,
+  "sample_count": 459,
+  "class_names": [
+    "ALL",
+    "AML",
+    "CLL",
+    "CML"
+  ],
+  "timestamp": "2025-07-26T16:43:59.661299"
+}
