@@ -1,288 +1,321 @@
 import pandas as pd
 import numpy as np
-import joblib
-import xgboost as xgb
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, StratifiedKFold
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score
-from sklearn.metrics import precision_recall_fscore_support, roc_auc_score
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
+from sklearn.preprocessing import RobustScaler, LabelEncoder
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (classification_report, confusion_matrix,
+                           accuracy_score, precision_score, recall_score,
+                           f1_score, roc_auc_score, roc_curve)
+from sklearn.feature_selection import SelectKBest, f_classif, RFE
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import RandomizedSearchCV
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import TomekLinks
+from imblearn.pipeline import Pipeline as ImbPipeline
 import warnings
 warnings.filterwarnings('ignore')
 
-print("=== XGBoost Blood Cancer Classification ===")
+class OptimizedCancerTypeClassifier:
+    def __init__(self):
+        self.models = {}
+        self.scaler = None
+        self.label_encoders = {}
+        self.feature_selector = None
+        self.best_model = None
+        self.best_model_name = None
+        self.target_encoder = None
 
-# Load the processed dataset
-try:
-    df = pd.read_csv('public/test_analysis/processed_blood_cancer_dataset.csv')
-    print(f"✅ Dataset loaded successfully!")
-    print(f"Dataset shape: {df.shape}")
-    print(f"Columns: {df.columns.tolist()}")
-except FileNotFoundError:
-    print("❌ Error: Could not find the processed dataset file.")
-    print("Please ensure 'public/test_analysis/processed_blood_cancer_dataset.csv' exists.")
-    exit()
+    def load_data(self, file_path):
+        # Load dataset from CSV
+        df = pd.read_csv(file_path)
 
-# Display basic information about the dataset
-print(f"\n=== Dataset Overview ===")
-print(f"Dataset shape: {df.shape}")
-print(f"\nTarget variable distribution:")
-print(df['Cancer_Type(AML, ALL, CLL)'].value_counts())
-print(f"\nMissing values:")
-print(df.isnull().sum())
+        # Check for required columns
+        if 'Cancer_Type(AML, ALL, CLL)' not in df.columns:
+            raise ValueError("Required column 'Cancer_Type(AML, ALL, CLL)' not found in the dataset.")
 
-# Prepare features and target
-X = df.drop('Cancer_Type(AML, ALL, CLL)', axis=1)
-y = df['Cancer_Type(AML, ALL, CLL)']
+        print(f"Data loaded successfully with {df.shape[0]} rows and {df.shape[1]} columns.")
+        return df
 
-print(f"\nFeature matrix shape: {X.shape}")
-print(f"Features: {X.columns.tolist()}")
+    def preprocess_data(self, df, target_column, test_size=0.2):
+        # Validate target column
+        if target_column not in df.columns:
+            raise ValueError(f"Target column '{target_column}' not found. Available columns: {df.columns.tolist()}")
 
-# Check class distribution
-print(f"\nClass distribution:")
-class_counts = y.value_counts()
-print(class_counts)
-print(f"Class balance ratio: {class_counts.min() / class_counts.max():.3f}")
+        X = df.drop(columns=[target_column])
+        y = df[target_column]
 
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
+        # Clean target variable
+        print(f"Original target distribution: {y.value_counts().to_dict()}")
 
-print(f"\nTraining set shape: {X_train.shape}")
-print(f"Test set shape: {X_test.shape}")
+        # Remove invalid entries
+        valid_cancer_types = ['AML', 'ALL', 'CLL', 'CML', 'Lymphoma', 'Multiple Myeloma']
+        valid_mask = y.isin(valid_cancer_types)
 
-# Feature scaling (XGBoost doesn't strictly require it, but can help)
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+        if not valid_mask.all():
+            print(f"Removing {(~valid_mask).sum()} invalid target entries")
+            X = X[valid_mask]
+            y = y[valid_mask]
 
-print(f"\n=== XGBoost Model Training ===")
+        # Enhanced preprocessing
+        categorical_cols = X.select_dtypes(include=['object', 'category']).columns
+        numerical_cols = X.select_dtypes(include=[np.number]).columns
 
-# Define XGBoost parameter grid for hyperparameter tuning
-param_grid = {
-    'n_estimators': [100, 200, 300, 500],
-    'max_depth': [3, 4, 5, 6, 7],
-    'learning_rate': [0.01, 0.1, 0.2, 0.3],
-    'subsample': [0.8, 0.9, 1.0],
-    'colsample_bytree': [0.8, 0.9, 1.0],
-    'reg_alpha': [0, 0.1, 0.5],
-    'reg_lambda': [1, 1.5, 2]
-}
+        # Encode categorical features
+        for col in categorical_cols:
+            le = LabelEncoder()
+            X[col] = le.fit_transform(X[col].astype(str))
+            self.label_encoders[col] = le
 
-# Create XGBoost classifier
-xgb_model = xgb.XGBClassifier(
-    objective='multi:softprob',
-    random_state=42,
-    n_jobs=-1,
-    eval_metric='mlogloss'
-)
+        # Handle missing values with median/mode imputation
+        for col in numerical_cols:
+            if X[col].isnull().sum() > 0:
+                X[col] = X[col].fillna(X[col].median())
 
-# Use RandomizedSearchCV for more efficient hyperparameter tuning
-print("🔄 Performing hyperparameter tuning with RandomizedSearchCV...")
+        for col in categorical_cols:
+            if X[col].isnull().sum() > 0:
+                X[col] = X[col].fillna(X[col].mode()[0] if not X[col].mode().empty else 0)
 
-# Use StratifiedKFold for better cross-validation with imbalanced classes
-cv_strategy = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        # Remove constant features
+        constant_features = X.columns[X.nunique() <= 1]
+        if len(constant_features) > 0:
+            print(f"Removing {len(constant_features)} constant features")
+            X = X.drop(columns=constant_features)
 
-random_search = RandomizedSearchCV(
-    xgb_model,
-    param_distributions=param_grid,
-    n_iter=50,  # Number of parameter combinations to try
-    cv=cv_strategy,
-    scoring='accuracy',
-    n_jobs=-1,
-    random_state=42,
-    verbose=1
-)
+        # Encode target
+        self.target_encoder = LabelEncoder()
+        y_encoded = self.target_encoder.fit_transform(y)
 
-# Fit the random search
-random_search.fit(X_train_scaled, y_train)
+        # Stratified split
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y_encoded, test_size=test_size, random_state=42, stratify=y_encoded
+        )
 
-print(f"✅ Best parameters found: {random_search.best_params_}")
-print(f"✅ Best cross-validation score: {random_search.best_score_:.4f}")
+        # Robust scaling
+        self.scaler = RobustScaler()
+        X_train_scaled = self.scaler.fit_transform(X_train)
+        X_test_scaled = self.scaler.transform(X_test)
 
-# Get the best model
-best_xgb_model = random_search.best_estimator_
+        # Advanced feature selection with RFE
+        rf_selector = RandomForestClassifier(n_estimators=50, random_state=42)
+        rfe = RFE(rf_selector, n_features_to_select=min(15, X_train.shape[1]))
+        X_train_selected = rfe.fit_transform(X_train_scaled, y_train)
+        X_test_selected = rfe.transform(X_test_scaled)
+        self.feature_selector = rfe
 
-# Train the best model on full training data
-print("\n🔄 Training final model with best parameters...")
-best_xgb_model.fit(X_train_scaled, y_train)
+        # SMOTE with Tomek links for better synthetic samples
+        smote_tomek = ImbPipeline([
+            ('smote', SMOTE(random_state=42, k_neighbors=3)),
+            ('tomek', TomekLinks())
+        ])
 
-# Make predictions
-y_pred = best_xgb_model.predict(X_test_scaled)
-y_pred_proba = best_xgb_model.predict_proba(X_test_scaled)
+        X_train_balanced, y_train_balanced = smote_tomek.fit_resample(X_train_selected, y_train)
 
-# Calculate metrics
-accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred, average='weighted')
+        print(f"Final training shape: {X_train_balanced.shape}")
+        print(f"Final test shape: {X_test_selected.shape}")
 
-print(f"\n=== Model Performance ===")
-print(f"🎯 Test Accuracy: {accuracy:.4f} ({accuracy*100:.2f}%)")
-print(f"🎯 Weighted F1-Score: {f1:.4f}")
+        return X_train_balanced, X_test_selected, y_train_balanced, y_test
 
-# Detailed classification report
-print(f"\n📊 Classification Report:")
-print(classification_report(y_test, y_pred))
+    def train_models(self, X_train, y_train):
+        # Optimized model configurations with regularization
+        model_configs = {
+            'Random Forest': {
+                'model': RandomForestClassifier(
+                    random_state=42,
+                    n_jobs=-1,
+                    class_weight='balanced',
+                    oob_score=True
+                ),
+                'params': {
+                    'n_estimators': [100, 200],
+                    'max_depth': [8, 12],
+                    'min_samples_split': [10, 20],
+                    'min_samples_leaf': [5, 10],
+                    'max_features': ['sqrt', 0.7]
+                }
+            },
+            'Gradient Boosting': {
+                'model': GradientBoostingClassifier(
+                    random_state=42,
+                    n_iter_no_change=10,
+                    validation_fraction=0.1
+                ),
+                'params': {
+                    'n_estimators': [100, 150],
+                    'learning_rate': [0.05, 0.1],
+                    'max_depth': [4, 6],
+                    'subsample': [0.8, 0.9],
+                    'max_features': ['sqrt', 0.8]
+                }
+            },
+            'SVM': {
+                'model': SVC(
+                    random_state=42,
+                    probability=True,
+                    class_weight='balanced'
+                ),
+                'params': {
+                    'C': [0.1, 1, 10],
+                    'kernel': ['rbf'],
+                    'gamma': ['scale', 'auto']
+                }
+            },
+            'Logistic Regression': {
+                'model': LogisticRegression(
+                    random_state=42,
+                    max_iter=2000,
+                    class_weight='balanced'
+                ),
+                'params': {
+                    'C': [0.1, 1, 10],
+                    'penalty': ['l2'],
+                    'solver': ['lbfgs']
+                }
+            }
+        }
 
-# Confusion Matrix
-print(f"\n📊 Confusion Matrix:")
-cm = confusion_matrix(y_test, y_pred)
-print(cm)
+        # Use stratified 5-fold CV
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
-# Cross-validation scores
-print(f"\n📊 Cross-Validation Scores:")
-cv_scores = cross_val_score(best_xgb_model, X_train_scaled, y_train, cv=cv_strategy, scoring='accuracy')
-print(f"CV Accuracy: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})")
+        for name, config in model_configs.items():
+            print(f"Training {name}...")
 
-# Feature importance
-print(f"\n📊 Feature Importance:")
-feature_importance = best_xgb_model.feature_importances_
-feature_names = X.columns
-importance_df = pd.DataFrame({
-    'feature': feature_names,
-    'importance': feature_importance
-}).sort_values('importance', ascending=False)
+            grid_search = GridSearchCV(
+                config['model'],
+                config['params'],
+                cv=cv,
+                scoring='f1_macro',
+                n_jobs=-1,
+                verbose=0
+            )
 
-print(importance_df)
+            grid_search.fit(X_train, y_train)
+            self.models[name] = grid_search.best_estimator_
+            print(f"{name} - CV Score: {grid_search.best_score_:.4f}")
 
-# If accuracy is below 90%, try additional techniques
-if accuracy < 0.90:
-    print(f"\n⚠️  Current accuracy ({accuracy*100:.2f}%) is below 90%. Trying advanced techniques...")
-    
-    # Try with more aggressive hyperparameter tuning
-    advanced_param_grid = {
-        'n_estimators': [300, 500, 700, 1000],
-        'max_depth': [4, 6, 8, 10],
-        'learning_rate': [0.01, 0.05, 0.1, 0.15, 0.2],
-        'subsample': [0.7, 0.8, 0.9],
-        'colsample_bytree': [0.7, 0.8, 0.9],
-        'reg_alpha': [0, 0.1, 0.5, 1.0],
-        'reg_lambda': [1, 2, 3],
-        'min_child_weight': [1, 3, 5],
-        'gamma': [0, 0.1, 0.2]
-    }
-    
-    print("🔄 Performing advanced hyperparameter tuning...")
-    
-    advanced_random_search = RandomizedSearchCV(
-        xgb_model,
-        param_distributions=advanced_param_grid,
-        n_iter=100,  # More iterations
-        cv=cv_strategy,
-        scoring='accuracy',
-        n_jobs=-1,
-        random_state=42,
-        verbose=1
-    )
-    
-    advanced_random_search.fit(X_train_scaled, y_train)
-    
-    # Get the new best model
-    advanced_best_model = advanced_random_search.best_estimator_
-    
-    # Make new predictions
-    y_pred_advanced = advanced_best_model.predict(X_test_scaled)
-    accuracy_advanced = accuracy_score(y_test, y_pred_advanced)
-    
-    print(f"🎯 Advanced Model Accuracy: {accuracy_advanced:.4f} ({accuracy_advanced*100:.2f}%)")
-    
-    if accuracy_advanced > accuracy:
-        best_xgb_model = advanced_best_model
-        y_pred = y_pred_advanced
-        accuracy = accuracy_advanced
-        print(f"✅ Improved accuracy achieved!")
+        # Create ensemble
+        ensemble = VotingClassifier([
+            ('rf', self.models['Random Forest']),
+            ('gb', self.models['Gradient Boosting']),
+            ('svm', self.models['SVM']),
+            ('lr', self.models['Logistic Regression'])
+        ], voting='soft')
 
-# Save the best model and related files
-print(f"\n💾 Saving model and results...")
+        ensemble.fit(X_train, y_train)
+        self.models['Ensemble'] = ensemble
 
-# Save the best XGBoost model
-model_file = 'public/test_analysis/xgboost_blood_cancer_model.pkl'
-joblib.dump(best_xgb_model, model_file)
-print(f"✅ XGBoost model saved to: {model_file}")
+    def evaluate_models(self, X_train, X_test, y_train, y_test):
+        results = {}
 
-# Save the scaler
-scaler_file = 'public/test_analysis/xgboost_scaler.pkl'
-joblib.dump(scaler, scaler_file)
-print(f"✅ Scaler saved to: {scaler_file}")
+        for name, model in self.models.items():
+            print(f"Evaluating {name}...")
 
-# Save feature importance
-importance_file = 'public/test_analysis/xgboost_feature_importance.csv'
-importance_df.to_csv(importance_file, index=False)
-print(f"✅ Feature importance saved to: {importance_file}")
+            # Predictions
+            y_pred_test = model.predict(X_test)
+            y_pred_train = model.predict(X_train)
 
-# Save model performance metrics
-metrics = {
-    'accuracy': accuracy,
-    'f1_score': f1,
-    'cv_mean': cv_scores.mean(),
-    'cv_std': cv_scores.std(),
-    'best_params': random_search.best_params_
-}
+            if hasattr(model, 'predict_proba'):
+                y_pred_proba_test = model.predict_proba(X_test)
+                y_pred_proba_train = model.predict_proba(X_train)
+            else:
+                y_pred_proba_test = None
+                y_pred_proba_train = None
 
-metrics_file = 'public/test_analysis/xgboost_metrics.pkl'
-joblib.dump(metrics, metrics_file)
-print(f"✅ Model metrics saved to: {metrics_file}")
+            # Metrics
+            test_f1 = f1_score(y_test, y_pred_test, average='macro')
+            train_f1 = f1_score(y_train, y_pred_train, average='macro')
 
-# Create visualizations
-print(f"\n📊 Creating visualizations...")
+            test_auc = None
+            train_auc = None
+            if y_pred_proba_test is not None:
+                try:
+                    test_auc = roc_auc_score(y_test, y_pred_proba_test, multi_class='ovr', average='macro')
+                    train_auc = roc_auc_score(y_train, y_pred_proba_train, multi_class='ovr', average='macro')
+                except:
+                    pass
 
-# 1. Feature Importance Plot
-plt.figure(figsize=(10, 6))
-plt.barh(importance_df['feature'], importance_df['importance'])
-plt.title(f'XGBoost Feature Importance\nModel Accuracy: {accuracy*100:.2f}%')
-plt.xlabel('Importance')
-plt.tight_layout()
-plt.savefig('public/test_analysis/xgboost_feature_importance.png', dpi=300, bbox_inches='tight')
-plt.show()
+            # Overfitting score
+            overfitting_score = train_f1 - test_f1
 
-# 2. Confusion Matrix Heatmap
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-plt.title(f'XGBoost Confusion Matrix\nAccuracy: {accuracy*100:.2f}%')
-plt.ylabel('True Label')
-plt.xlabel('Predicted Label')
-plt.tight_layout()
-plt.savefig('public/test_analysis/xgboost_confusion_matrix.png', dpi=300, bbox_inches='tight')
-plt.show()
+            results[name] = {
+                'train_f1': train_f1,
+                'test_f1': test_f1,
+                'train_auc': train_auc,
+                'test_auc': test_auc,
+                'overfitting_score': overfitting_score,
+                'y_pred_test': y_pred_test,
+                'y_pred_proba_test': y_pred_proba_test
+            }
 
-# 3. Cross-validation scores plot
-plt.figure(figsize=(8, 6))
-plt.bar(range(len(cv_scores)), cv_scores)
-plt.axhline(y=cv_scores.mean(), color='red', linestyle='--', label=f'Mean: {cv_scores.mean():.4f}')
-plt.title('Cross-Validation Accuracy Scores')
-plt.xlabel('Fold')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.tight_layout()
-plt.savefig('public/test_analysis/xgboost_cv_scores.png', dpi=300, bbox_inches='tight')
-plt.show()
+        # Select best model based on lowest overfitting and highest test F1
+        best_model = min(results.items(),
+                        key=lambda x: (x[1]['overfitting_score'], -x[1]['test_f1']))
 
-print(f"\n✅ Visualizations saved to 'public/test_analysis/' directory")
+        self.best_model_name = best_model[0]
+        self.best_model = self.models[self.best_model_name]
 
-# Final summary
-print(f"\n=== FINAL RESULTS SUMMARY ===")
-print(f"🏆 Final Model Accuracy: {accuracy*100:.2f}%")
-print(f"🏆 Cross-Validation Accuracy: {cv_scores.mean()*100:.2f}% (+/- {cv_scores.std()*200:.2f}%)")
-print(f"🏆 Weighted F1-Score: {f1:.4f}")
+        return results
 
-if accuracy >= 0.90:
-    print(f"🎉 SUCCESS: Achieved target accuracy of ≥90%!")
-else:
-    print(f"⚠️  Target accuracy of 90% not quite reached. Consider:")
-    print(f"   - Collecting more training data")
-    print(f"   - Feature engineering")
-    print(f"   - Ensemble methods")
-    print(f"   - Different algorithms")
+    def print_detailed_results(self, results, y_test):
+        print("\n" + "="*80)
+        print("OPTIMIZED CANCER TYPE CLASSIFIER RESULTS")
+        print("="*80)
 
-print(f"\n📁 All files saved in 'public/test_analysis/' directory:")
-print(f"   - xgboost_blood_cancer_model.pkl")
-print(f"   - xgboost_scaler.pkl")
-print(f"   - xgboost_feature_importance.csv")
-print(f"   - xgboost_metrics.pkl")
-print(f"   - xgboost_feature_importance.png")
-print(f"   - xgboost_confusion_matrix.png")
-print(f"   - xgboost_cv_scores.png")
+        for name, metrics in results.items():
+            print(f"\n{name}:")
+            print("-" * 50)
+            print(f"  Test F1 Score:      {metrics['test_f1']:.4f}")
+            print(f"  Train F1 Score:     {metrics['train_f1']:.4f}")
+            print(f"  Overfitting Score:  {metrics['overfitting_score']:.4f}")
+            if metrics['test_auc']:
+                print(f"  Test AUC:           {metrics['test_auc']:.4f}")
 
-print(f"\n=== XGBoost Analysis Completed Successfully! ===")
+        print(f"\n{'='*50}")
+        print(f"BEST MODEL (Lowest Overfitting): {self.best_model_name}")
+        print(f"{'='*50}")
+
+        # Classification report for best model
+        best_pred = results[self.best_model_name]['y_pred_test']
+        print("\nClassification Report:")
+        print(classification_report(y_test, best_pred,
+                                  target_names=self.target_encoder.classes_))
+
+def main():
+    print("Optimized Cancer Type Classifier")
+    print("Requires CSV file - No sample data generation")
+    print("="*60)
+
+    classifier = OptimizedCancerTypeClassifier()
+
+    # Load data - MUST be from CSV
+    try:
+        df = classifier.load_data('public/blood_cancer_diseases_dataset.csv')
+        print(f"Available columns: {df.columns.tolist()}")
+    except Exception as e:
+        print(f"Error: {e}")
+        return None, None
+
+    # Determine target column
+    target_col = 'Cancer_Type(AML, ALL, CLL)'  # Based on your output
+
+    # Preprocess
+    try:
+        X_train, X_test, y_train, y_test = classifier.preprocess_data(df, target_col)
+    except Exception as e:
+        print(f"Preprocessing error: {e}")
+        return None, None
+
+    # Train models
+    classifier.train_models(X_train, y_train)
+
+    # Evaluate
+    results = classifier.evaluate_models(X_train, X_test, y_train, y_test)
+
+    # Print results
+    classifier.print_detailed_results(results, y_test)
+
+    return classifier, results
+
+if __name__ == "__main__":
+    classifier, results = main()

@@ -1,0 +1,91 @@
+Model,Best Parameters,Accuracy,ROC AUC,Confusion Matrix,Classification Report
+XGBoost_Fast,"{'colsample_bytree': 0.9, 'gamma': 0.1, 'learning_rate': 0.1, 'max_depth': 8, 'min_child_weight': 1, 'n_estimators': 200, 'reg_alpha': 0, 'reg_lambda': 1, 'subsample': 0.9}",0.16193181818181818,0.4954559534863907,"[[15  6 12 13  5 12]
+ [10  9 14 10  8  6]
+ [14  8 10 12 10  9]
+ [17  5 11  8  9  9]
+ [18 14  8  5  9  3]
+ [16  7  9  9  6  6]]","                  precision    recall  f1-score   support
+
+             ALL       0.17      0.24      0.20        63
+             AML       0.18      0.16      0.17        57
+             CLL       0.16      0.16      0.16        63
+             CML       0.14      0.14      0.14        59
+        Lymphoma       0.19      0.16      0.17        57
+Multiple Myeloma       0.13      0.11      0.12        53
+
+        accuracy                           0.16       352
+       macro avg       0.16      0.16      0.16       352
+    weighted avg       0.16      0.16      0.16       352
+"
+LightGBM_Fast,"{'colsample_bytree': 0.9, 'learning_rate': 0.05, 'max_depth': 8, 'min_child_samples': 20, 'n_estimators': 200, 'num_leaves': 50, 'reg_alpha': 0.1, 'reg_lambda': 0.1, 'subsample': 0.9}",0.19602272727272727,0.5081560084360867,"[[20  7 10 10  7  9]
+ [10  6 12 13 10  6]
+ [13  7 12 11 13  7]
+ [11  7 15 12  8  6]
+ [18 11  8  5 10  5]
+ [11 10  8 10  5  9]]","                  precision    recall  f1-score   support
+
+             ALL       0.24      0.32      0.27        63
+             AML       0.12      0.11      0.11        57
+             CLL       0.18      0.19      0.19        63
+             CML       0.20      0.20      0.20        59
+        Lymphoma       0.19      0.18      0.18        57
+Multiple Myeloma       0.21      0.17      0.19        53
+
+        accuracy                           0.20       352
+       macro avg       0.19      0.19      0.19       352
+    weighted avg       0.19      0.20      0.19       352
+"
+Random Forest Fast,"{'class_weight': 'balanced', 'max_depth': 15, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 300}",0.17613636363636365,0.5216227269228298,"[[16 10  8 11 12  6]
+ [ 9 12  8 11 11  6]
+ [13 11 10  9 10 10]
+ [16  9 11  8  7  8]
+ [18 17  8  2  9  3]
+ [17  6 10  9  4  7]]","                  precision    recall  f1-score   support
+
+             ALL       0.18      0.25      0.21        63
+             AML       0.18      0.21      0.20        57
+             CLL       0.18      0.16      0.17        63
+             CML       0.16      0.14      0.15        59
+        Lymphoma       0.17      0.16      0.16        57
+Multiple Myeloma       0.17      0.13      0.15        53
+
+        accuracy                           0.18       352
+       macro avg       0.18      0.17      0.17       352
+    weighted avg       0.18      0.18      0.17       352
+"
+Extra Trees Fast,"{'class_weight': 'balanced', 'max_depth': 15, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 200}",0.17329545454545456,0.5124781951845367,"[[14 12  6 13 11  7]
+ [ 9 12 11 10  7  8]
+ [ 9 13  6  5 17 13]
+ [ 9  9  9 10 12 10]
+ [14 10 10 10 11  2]
+ [11  8  9  7 10  8]]","                  precision    recall  f1-score   support
+
+             ALL       0.21      0.22      0.22        63
+             AML       0.19      0.21      0.20        57
+             CLL       0.12      0.10      0.11        63
+             CML       0.18      0.17      0.18        59
+        Lymphoma       0.16      0.19      0.18        57
+Multiple Myeloma       0.17      0.15      0.16        53
+
+        accuracy                           0.17       352
+       macro avg       0.17      0.17      0.17       352
+    weighted avg       0.17      0.17      0.17       352
+"
+Gradient Boosting Fast,"{'learning_rate': 0.05, 'max_depth': 6, 'max_features': 'sqrt', 'min_samples_split': 2, 'n_estimators': 150, 'subsample': 0.9}",0.16193181818181818,0.495561263222027,"[[13 10  7 19  7  7]
+ [ 9  9 13 11  9  6]
+ [15  9 12 10  7 10]
+ [14 11  6  9 12  7]
+ [16 14  7  7 10  3]
+ [17  6 10  7  9  4]]","                  precision    recall  f1-score   support
+
+             ALL       0.15      0.21      0.18        63
+             AML       0.15      0.16      0.16        57
+             CLL       0.22      0.19      0.20        63
+             CML       0.14      0.15      0.15        59
+        Lymphoma       0.19      0.18      0.18        57
+Multiple Myeloma       0.11      0.08      0.09        53
+
+        accuracy                           0.16       352
+       macro avg       0.16      0.16      0.16       352
+    weighted avg       0.16      0.16      0.16       352
+"

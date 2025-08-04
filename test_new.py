@@ -304,7 +304,7 @@ def main():
     
     # Try to load the uploaded file first
     try:
-        df = pd.read_csv('public/sample_blood_cancer_diseases_dataset.csv')
+        df = pd.read_csv('public/blood_cancer_diseases_dataset.csv')
     except:
         df = classifier.load_data()
     
