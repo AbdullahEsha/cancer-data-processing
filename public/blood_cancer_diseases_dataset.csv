@@ -1,4 +1,4 @@
-Age,Gender,"Cancer_Type(AML, ALL, CLL)","Treatment_Type(Chemotherapy, Radiation)",Bone Marrow Aspiration(Positive / Negative / Not Done),Total WBC count(/cumm),Serum Protein Electrophoresis (SPEP)(Normal / Abnormal),Lymph Node Biopsy(Positive / Negative / Not Done),Lumbar Puncture (Spinal Tap),Platelet Count(/cumm),Treatment_Outcome,"Genetic_Data(BCR-ABL, FLT3)",Side_Effects,Diagnosis_Result,Comments
+Age,Gender,"Cancer_Type(AML, ALL, CLL)","Treatment_Type(Chemotherapy, Radiation)",Bone Marrow Aspiration(Positive / Negative / Not Done),Total WBC count(/cumm),Serum Protein Electrophoresis(SPEP)(Normal / Abnormal),Lymph Node Biopsy(Positive / Negative / Not Done),Lumbar Puncture(Spinal Tap),Platelet Count(/cumm),Treatment_Outcome,"Genetic_Data(BCR-ABL, FLT3)",Side_Effects,Diagnosis_Result,Comments
 77,Female,CLL,Targeted Therapy,Not Done,39693,Normal,Positive,Negative,324539,Ongoing,FLT3,Mild,Confirmed,Critical
 87,Female,Lymphoma,Stem Cell Transplant,Negative,19989,Abnormal,Positive,Negative,23748,Cured,TP53,Moderate,Suspected,Critical
 82,Male,AML,Targeted Therapy,Not Done,60567,Abnormal,Negative,Negative,166343,Cured,BCR-ABL,Moderate,Confirmed,Follow-up required
